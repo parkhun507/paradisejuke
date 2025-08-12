@@ -10,16 +10,16 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-white mb-4">학습</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#courses" className="hover:text-pink-400">초급 코스</a></li>
-              <li><a href="#courses" className="hover:text-pink-400">중급 코스</a></li>
-              <li><a href="#courses" className="hover:text-pink-400">고급 코스</a></li>
+              <li><a href="courses" className="hover:text-pink-400">초급 코스</a></li>
+              <li><a href="courses" className="hover:text-pink-400">중급 코스</a></li>
+              <li><a href="courses" className="hover:text-pink-400">고급 코스</a></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold text-white mb-4">커뮤니티</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#community" className="hover:text-pink-400">자유게시판</a></li>
-              <li><a href="#community" className="hover:text-pink-400">스터디 그룹</a></li>
+              <li><a href="community" className="hover:text-pink-400">자유게시판</a></li>
+              <li><a href="community" className="hover:text-pink-400">스터디 그룹</a></li>
             </ul>
           </div>
           <div>

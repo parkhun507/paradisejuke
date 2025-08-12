@@ -37,9 +37,8 @@ const AuthModal = ({ isOpen, onClose, initialTab }: AuthModalProps) => {
       onClose();
 
     } catch (e) {
-      // 'any' 대신 'AuthError' 타입으로 오류를 처리합니다.
       const error = e as AuthError;
-      setError(error.message); // 표준 오류 메시지를 사용합니다.
+      setError(error.message); 
     } finally {
       setLoading(false);
     }
