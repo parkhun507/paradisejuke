@@ -4,49 +4,60 @@ import type { Session } from '@supabase/supabase-js';
 import { supabase } from './supabaseClient';
 import Header from './components/Header';
 import Footer from './components/Footer';
-
-// pages 폴더에 있는 모든 페이지 컴포넌트를 불러옵니다.
 import HomePage from './pages/HomePage';
 import CommunityPage from './pages/CommunityPage';
 import LearningPage from './pages/LearningPage';
+import AuthModal from './components/AuthModal'; // AuthModal을 직접 사용합니다.
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
+  
+  // 로그인 모달 상태를 App.tsx에서 관리합니다.
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [initialTab, setInitialTab] = useState<'login' | 'signup'>('login');
 
   useEffect(() => {
-    // Supabase 로그인 상태를 감지하는 로직
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
+    // ... Supabase 세션 관리 로직은 그대로 ...
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => setSession(session));
     return () => subscription.unsubscribe();
   }, []);
 
+  const openModal = (tab: 'login' | 'signup') => {
+    setInitialTab(tab);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="bg-neutral-50 text-neutral-600 font-sans antialiased">
-      <Header session={session} />
+      {/* Header에 세션 정보와 모달을 여는 함수를 전달합니다. */}
+      <Header session={session} openModal={openModal} />
       <main>
-        {/* URL 경로에 따라 보여줄 페이지를 정의합니다. */}
         <Routes>
-          {/* 기본 경로 ('/')에서는 HomePage를 보여줍니다. */}
-          <Route path="/" element={<HomePage />} />
-          
-          {/* '/community' 경로에서는 CommunityPage를 보여줍니다. */}
+          {/* HomePage에 세션 정보와 모달 함수를 전달합니다. */}
+          <Route path="/" element={<HomePage session={session} openModal={openModal} />} />
           <Route path="/community" element={<CommunityPage />} />
           
-          {/* '/learn/:courseId' 경로에서는 LearningPage를 보여줍니다. */}
-          <Route path="/learn/:courseId" element={<LearningPage />} />
+          {/* LearningPage 경로 보호 */}
+          <Route 
+            path="/learn/:courseId" 
+            element={
+              session ? <LearningPage /> : <HomePage session={session} openModal={openModal} />
+            } 
+          />
         </Routes>
       </main>
       <Footer />
+
+      {/* 모달은 App.tsx에서 직접 렌더링합니다. */}
+      {!session && <AuthModal isOpen={isModalOpen} onClose={closeModal} initialTab={initialTab} />}
     </div>
   );
 }
 
 export default App;
+
 
 
